@@ -2,10 +2,11 @@ package com.example.insurion;
 
 import com.example.insurion._importBordereau.InsurionResponse;
 import com.example.insurion._importBordereau.Passenger;
-import com.example.insurion._importBordereau.Risks;
+import com.example.insurion._importBordereau.ListPassangers;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.StringHttpMessageConverter;
@@ -18,7 +19,7 @@ import java.util.List;
 public class Main2 {
     public static void main(String[] args) {
 
-        Risks risks = new Risks();
+        ListPassangers listPassangers = new ListPassangers();
 
         List<Passenger> passengers = new ArrayList<>();
         Passenger passenger = Passenger.builder()
@@ -41,9 +42,10 @@ public class Main2 {
                 .override(true).build();
         passengers.add(passenger);
 
-        risks.setRisks(passengers);
+        listPassangers.setRisks(passengers);
 
         String URL = "https://env-6655618.jelastic.regruhosting.ru/api/v2/importBordereau?partnerCode=312&sign=0c673aa31841703ffe1df0d76a2b00f7fee3f0eed7277a176e1082e6070430f4";
+        //String URL = "https://env-6655618.jelastic.regruhosting.ru/api/v2/importBordereau?partnerCode=312&sign=0c673aa31841703ffe1df0d76a2b00f7fee3f0eed7277a176e1082e6070430f4";
 
         RestTemplate restTemplate = new RestTemplate();
         restTemplate.getMessageConverters()
@@ -52,12 +54,16 @@ public class Main2 {
         ObjectMapper mapper = new ObjectMapper();
         String s = "";
         try {
-            s = mapper.writeValueAsString(risks);
+            s = mapper.writeValueAsString(listPassangers);
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
 
-        ResponseEntity<InsurionResponse> response2 = restTemplate.exchange(URL, HttpMethod.POST, new HttpEntity<>(risks), InsurionResponse.class);
+        HttpHeaders requestHeaders = new HttpHeaders();
+        requestHeaders.add(HttpHeaders.CONTENT_TYPE, "application/x-www-form-urlencoded");
+        //ResponseEntity<String> st = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+
+        ResponseEntity<InsurionResponse> response2 = restTemplate.exchange(URL, HttpMethod.POST, new HttpEntity<>(listPassangers), InsurionResponse.class);
         System.out.println(response2);
     }
 }

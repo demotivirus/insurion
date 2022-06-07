@@ -8,13 +8,13 @@ import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 @Data
-public class Risks {
+public class ListPassangers {
     private List<Passenger> risks;
 
-    public Risks(List<Passenger> risks) {
+    public ListPassangers(List<Passenger> risks) {
         this.risks = risks;
     }
 
-    public Risks() {
+    public ListPassangers() {
     }
 }
